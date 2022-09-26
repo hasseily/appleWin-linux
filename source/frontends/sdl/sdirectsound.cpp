@@ -89,8 +89,8 @@ namespace
     want.freq = myBuffer->sampleRate;
     want.format = AUDIO_S16LSB;
     want.channels = myBuffer->channels;
-    // samples for 20 msec: 44100Hz * 2Ch * 0.02 => 1764
-    want.samples = Uint16(want.freq * want.channels * 0.02);
+    // samples for 40 msec: 44100Hz * 0.04 => 1764
+    want.samples = Uint16(want.freq * 0.04);
     want.callback = nullptr;
     myAudioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &myAudioSpec, 0);
 
