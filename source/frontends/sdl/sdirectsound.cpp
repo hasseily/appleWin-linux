@@ -89,7 +89,8 @@ namespace
     want.freq = myBuffer->sampleRate;
     want.format = AUDIO_S16LSB;
     want.channels = myBuffer->channels;
-    want.samples = 4096;  // what does this really mean?
+    // samples for 20 msec: 44100Hz * 2Ch * 0.02 => 1764
+    want.samples = Uint16(want.freq * want.channels * 0.02);
     want.callback = nullptr;
     myAudioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &myAudioSpec, 0);
 
@@ -158,7 +159,8 @@ namespace
     const Uint8 svolume = Uint8(linVolume * SDL_MIX_MAXVOLUME);
 
     // this is a bit of a waste copy-time, but it reuses SDL to do it properly
-    myMixerBuffer.resize(size);
+    if (myMixerBuffer.size() < size)
+      myMixerBuffer.resize(size);
     memset(myMixerBuffer.data(), 0, size);
     SDL_MixAudioFormat(myMixerBuffer.data(), (const Uint8*)ptr, myAudioSpec.format, size, svolume);
     SDL_QueueAudio(myAudioDevice, myMixerBuffer.data(), size);
