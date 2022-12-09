@@ -81,8 +81,8 @@ namespace
       }
      },
      {
-      "video",
-      "Video mode",
+      "video_type",
+      "Video type",
       REG_CONFIG,
       REGVALUE_VIDEO_MODE,
       {
@@ -94,6 +94,16 @@ namespace
        {"Monochrome (Amber)", VT_MONO_AMBER},
        {"Monochrome (Green)", VT_MONO_GREEN},
        {"Monochrome (White)", VT_MONO_WHITE},
+      }
+     },
+     {
+      "video_style",
+      "Video style",
+      REG_CONFIG,
+      REGVALUE_VIDEO_STYLE,
+      {
+       {"None", VS_NONE},
+       {"Half Scanlines", VS_HALF_SCANLINES},
       }
      },
     };
@@ -171,4 +181,29 @@ namespace ra2
     return registry;
   }
 
+  u_int32_t lookupValue(std::string name, std::string key)
+  {
+    for (const Variable& variable : ourVariables)
+    {
+      if (variable.name == name)
+      {
+        for (const auto &map : variable.values)
+        {
+          if (map.first == key)
+          {
+            ra2::log_cb(RETRO_LOG_DEBUG,
+              "RA2: %s (name: %s, key: %s => value: %d)\n",
+              __FUNCTION__, name.c_str(), key.c_str(), map.second
+            );
+            return map.second;
+          }
+        }
+      }
+    }
+    ra2::log_cb(RETRO_LOG_ERROR,
+      "RA2: %s (no value for name '%s' and key '%s' found, returning 0)\n",
+      __FUNCTION__, name.c_str(), key.c_str()
+    );
+    return DWORD(0);
+  }
 }

@@ -36,6 +36,38 @@ namespace
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
   }
 
+  void update_variables()
+  {
+    Video& video = GetVideo();
+    VideoType_e prev_vid_type = video.GetVideoType();
+    VideoStyle_e prev_vid_style = video.GetVideoStyle();
+
+    VideoType_e cur_vid_type = prev_vid_type;
+    VideoStyle_e cur_vid_style = prev_vid_style;
+
+    struct retro_variable var = {0};
+
+    var.key = "applewin_video_type";
+    if (ra2::environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+      cur_vid_type = static_cast<VideoType_e>(ra2::lookupValue("video_type", var.value));
+    }
+
+    var.key = "applewin_video_style";
+    if (ra2::environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+      cur_vid_style = static_cast<VideoStyle_e>(ra2::lookupValue("video_style", var.value));
+    }
+
+    if (!(prev_vid_type == cur_vid_type && prev_vid_style == cur_vid_style))
+    {
+      video.SetVideoStyle(cur_vid_style);
+      video.SetVideoType(cur_vid_type);
+      video.VideoReinitialize(false);
+      ra2::log_cb(RETRO_LOG_DEBUG, "RA2: %s (applied video settings)\n", __FUNCTION__);
+    }
+  }
+
   bool retro_set_eject_state(bool ejected)
   {
     ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%d)\n", __FUNCTION__, ejected);
@@ -282,6 +314,12 @@ void retro_run(void)
   GetFrame().VideoPresentScreen();
   const size_t ms = (1000 + 60 - 1) / 60; // round up
   ra2::writeAudio(ms);
+
+  bool updated = false;
+  if (ra2::environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+  {
+    update_variables();
+  }
 }
 
 bool retro_load_game(const retro_game_info *info)
