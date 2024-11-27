@@ -1,8 +1,12 @@
 #include "StdAfx.h"
+
 #include "frontends/common2/gnuframe.h"
 #include "frontends/common2/fileregistry.h"
 
+#include "linux/resources.h"
+
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <libgen.h>
 
@@ -12,6 +16,10 @@
 
 #include "Core.h"
 #include "config.h"
+
+#ifdef __MINGW32__
+#define realpath(N,R) _fullpath((R),(N),_MAX_PATH)
+#endif
 
 namespace
 {
@@ -36,7 +44,11 @@ namespace
 
     char self[1024] = {0};
 
-#ifdef __APPLE__
+#ifdef APPLEWIN_ON_WINDOWS
+    int ch = GetModuleFileNameA(0, self, sizeof(self));
+    if (ch >= sizeof(self))
+        ch = -1;
+#elif defined(__APPLE__)
     uint32_t size = sizeof(self);
     const int ch = _NSGetExecutablePath(self, &size);
 #else
@@ -85,6 +97,40 @@ namespace common2
   {
     // should this go down to LinuxFrame (maybe Initialisation?)
     g_sProgramDir = getResourceFolder("/bin/");
+  }
+
+  
+  BYTE* GNUFrame::GetResource(WORD id, LPCSTR lpType, DWORD expectedSize)
+  {
+    myResource.clear();
+
+    const std::string & filename = getResourceName(id);
+    const std::string path = getResourcePath(filename);
+
+    const int fd = open(path.c_str(), O_RDONLY);
+
+    if (fd != -1)
+    {
+      struct stat stdbuf;
+      if ((fstat(fd, &stdbuf) == 0) && S_ISREG(stdbuf.st_mode))
+      {
+        const off_t size = stdbuf.st_size;
+        std::vector<BYTE> data(size);
+        const ssize_t rd = read(fd, data.data(), size);
+        if (rd == expectedSize)
+        {
+          std::swap(myResource, data);
+        }
+      }
+      close(fd);
+    }
+
+    if (myResource.empty())
+    {
+      LogFileOutput("FindResource: could not load resource %s\n", filename.c_str());
+    }
+
+    return myResource.data();
   }
 
   std::string GNUFrame::getResourcePath(const std::string & filename)

@@ -284,10 +284,10 @@ bool MockingboardCardManager::Init(void)
 		return false;
 
 	HRESULT hr = DSGetSoundBuffer(&m_mockingboardVoice, DSBCAPS_CTRLVOLUME, SOUNDBUFFER_SIZE, MockingboardCard::SAMPLE_RATE, MockingboardCard::NUM_MB_CHANNELS, "MB");
-	LogFileOutput("MBCardMgr: DSGetSoundBuffer(), hr=0x%08X\n", hr);
+	LogFileOutput("MBCardMgr: DSGetSoundBuffer(), hr=0x%08X\n", (unsigned)hr);
 	if (FAILED(hr))
 	{
-		LogFileOutput("MBCardMgr: DSGetSoundBuffer failed (%08X)\n", hr);
+		LogFileOutput("MBCardMgr: DSGetSoundBuffer failed (%08X)\n", (unsigned)hr);
 		return false;
 	}
 
@@ -303,7 +303,7 @@ bool MockingboardCardManager::Init(void)
 		m_mockingboardVoice.nVolume = DSBVOLUME_MAX;
 
 	hr = m_mockingboardVoice.lpDSBvoice->SetVolume(m_mockingboardVoice.nVolume);
-	LogFileOutput("MBCardMgr: SetVolume(), hr=0x%08X\n", hr);
+	LogFileOutput("MBCardMgr: SetVolume(), hr=0x%08X\n", (unsigned)hr);
 	return true;
 }
 

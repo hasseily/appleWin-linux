@@ -1,5 +1,15 @@
-#ifdef _MSC_VER
+#if defined (_MSC_VER) || defined (__MINGW32__)
+ #define APPLEWIN_ON_WINDOWS
+#endif
 
+#ifdef APPLEWIN_ON_WINDOWS
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#ifdef __MINGW32__
+#define STRSAFE_NO_DEPRECATE
+#endif
 #include <tchar.h>
 
 #include <crtdbg.h>
@@ -8,6 +18,7 @@
 // maintenance perhaps)
 // <strmif.h> *must* be included before <dsound.h> for x64 to work.
 #include <strmif.h>
+#include <mmeapi.h>
 #include <dsound.h>
 #include <dshow.h>
 
@@ -25,7 +36,6 @@ typedef UINT32 uint32_t;
 typedef UINT64 uint64_t;
 #endif
 
-#include <windows.h>
 #include <winuser.h> // WM_MOUSEWHEEL
 #include <shlwapi.h>
 #include <strsafe.h>

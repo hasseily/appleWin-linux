@@ -1,10 +1,14 @@
 #pragma once
 
+#ifndef APPLEWIN_ON_WINDOWS
 #include "wincompat.h"
+#endif
+
 #include <string>
 #include <map>
 #include <memory>
 #include <cstring>
+
 
 class Registry
 {

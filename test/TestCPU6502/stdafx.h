@@ -5,12 +5,18 @@
 
 #pragma once
 
-#ifdef _MSC_VER
+#if defined (_MSC_VER) || defined (__MINGW32__)
+#define APPLEWIN_ON_WINDOWS
+#endif
+
+#ifdef APPLEWIN_ON_WINDOWS
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 #include <stdio.h>
 #include <tchar.h>
-
-#include <windows.h>
+#include <crtdbg.h>
 
 #if _MSC_VER >= 1600	// <stdint.h> supported from VS2010 (cl.exe v16.00)
 #include <stdint.h> // cleanup WORD DWORD -> uint16_t uint32_t

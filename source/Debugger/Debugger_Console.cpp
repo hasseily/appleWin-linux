@@ -31,6 +31,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Debug.h"
 #include "StrFormat.h"
 
+#ifndef CONSOLE_INPUT_CHAR16
+#include <cstring>
+#endif
+
 // Console ________________________________________________________________________________________
 
 	// See ConsoleInputReset() for why the console input

@@ -751,7 +751,7 @@ static ULONG Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, ULONG nNumSamples)
 	HRESULT hr = SpeakerVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
 	if (FAILED(hr))
 	{
-		LogFileOutput("Spkr_SubmitWaveBuffer: GetCurrentPosition failed (%08X)\n", hr);
+		LogFileOutput("Spkr_SubmitWaveBuffer: GetCurrentPosition failed (%08X)\n", (unsigned)hr);
 		return nNumSamples;
 	}
 
@@ -861,7 +861,7 @@ static ULONG Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, ULONG nNumSamples)
 											(void*)pDSLockedBuffer1, dwDSLockedBufferSize1);
 		if (FAILED(hr))
 		{
-			LogFileOutput("Spkr_SubmitWaveBuffer: Unlock failed (%08X)\n", hr);
+			LogFileOutput("Spkr_SubmitWaveBuffer: Unlock failed (%08X)\n", (unsigned)hr);
 			return nNumSamples;
 		}
 
@@ -879,7 +879,7 @@ void Spkr_Mute()
 	if(SpeakerVoice.bActive && !SpeakerVoice.bMute)
 	{
 		HRESULT hr = SpeakerVoice.lpDSBvoice->SetVolume(DSBVOLUME_MIN);
-		LogFileOutput("Spkr_Mute: SetVolume(%d) res = %08X\n", DSBVOLUME_MIN, hr);
+		LogFileOutput("Spkr_Mute: SetVolume(%d) res = %08X\n", DSBVOLUME_MIN, (unsigned)hr);
 		SpeakerVoice.bMute = true;
 	}
 }
@@ -890,7 +890,7 @@ void Spkr_Unmute()
 	if(SpeakerVoice.bActive && SpeakerVoice.bMute)
 	{
 		HRESULT hr = SpeakerVoice.lpDSBvoice->SetVolume(SpeakerVoice.nVolume);
-		LogFileOutput("Spkr_Unmute: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, hr);
+		LogFileOutput("Spkr_Unmute: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, (unsigned)hr);
 		SpeakerVoice.bMute = false;
 	}
 }
@@ -940,7 +940,7 @@ void SpkrSetVolume(DWORD dwVolume, DWORD dwVolumeMax)
 	if (SpeakerVoice.bActive && !SpeakerVoice.bMute)
 	{
 		HRESULT hr = SpeakerVoice.lpDSBvoice->SetVolume(SpeakerVoice.nVolume);
-		LogFileOutput("SpkrSetVolume: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, hr);
+		LogFileOutput("SpkrSetVolume: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, (unsigned)hr);
 	}
 }
 
@@ -963,7 +963,7 @@ bool Spkr_DSInit()
 	HRESULT hr = DSGetSoundBuffer(&SpeakerVoice, DSBCAPS_CTRLVOLUME, g_dwDSSpkrBufferSize, SPKR_SAMPLE_RATE, g_nSPKR_NumChannels, "Spkr");
 	if (FAILED(hr))
 	{
-		LogFileOutput("Spkr_DSInit: DSGetSoundBuffer failed (%08X)\n", hr);
+		LogFileOutput("Spkr_DSInit: DSGetSoundBuffer failed (%08X)\n", (unsigned)hr);
 		return false;
 	}
 
@@ -980,14 +980,14 @@ bool Spkr_DSInit()
 		SpeakerVoice.nVolume = DSBVOLUME_MAX;
 
 	hr = SpeakerVoice.lpDSBvoice->SetVolume(SpeakerVoice.nVolume);
-	LogFileOutput("Spkr_DSInit: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, hr);
+	LogFileOutput("Spkr_DSInit: SetVolume(%d) res = %08X\n", SpeakerVoice.nVolume, (unsigned)hr);
 
 	//
 
 	DWORD dwCurrentPlayCursor, dwCurrentWriteCursor;
 	hr = SpeakerVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
 	if (FAILED(hr))
-		LogFileOutput("Spkr_DSInit: GetCurrentPosition failed (%08X)\n", hr);
+		LogFileOutput("Spkr_DSInit: GetCurrentPosition failed (%08X)\n", (unsigned)hr);
 	if (SUCCEEDED(hr) && (dwCurrentPlayCursor == dwCurrentWriteCursor))
 	{
 		// KLUDGE: For my WinXP PC with "VIA AC'97 Enhanced Audio Controller"
@@ -995,7 +995,7 @@ bool Spkr_DSInit()
 		Sleep(200);
 
 		hr = SpeakerVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
-		LogFileOutput("Spkr_DSInit: GetCurrentPosition kludge (%08X)\n", hr);
+		LogFileOutput("Spkr_DSInit: GetCurrentPosition kludge (%08X)\n", (unsigned)hr);
 		LogOutput("[DSInit] PC=%08X, WC=%08X, Diff=%08X\n", dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor-dwCurrentPlayCursor);
 	}
 

@@ -7,6 +7,21 @@
 #include "Core.h"
 #include "Utilities.h"
 
+#include "../resource/resource.h"
+#include "rom_Apple2.inl"
+#include "rom_Apple2_Plus.inl"
+#include "rom_Apple2_JPlus.inl"
+#include "rom_Apple2e.inl"
+#include "rom_Apple2e_Enhanced.inl"
+#include "rom_PRAVETS82.inl"
+#include "rom_PRAVETS8M.inl"
+#include "rom_PRAVETS8C.inl"
+#include "rom_TK3000e.inl"
+#include "rom_Base64A.inl"
+#include "bmp_CHARSET8C.inl"
+#include "bmp_CHARSET8M.inl"
+#include "bmp_CHARSET82.inl"
+
 #include <fstream>
 
 namespace
@@ -79,7 +94,7 @@ namespace ra2
 {
 
   RetroFrame::RetroFrame(const common2::EmulatorOptions & options)
-  : common2::GNUFrame(options)
+  : common2::CommonFrame(options)
   {
   }
 
@@ -140,43 +155,53 @@ namespace ra2
 
   void RetroFrame::GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits)
   {
-    const std::string filename = getBitmapFilename(lpBitmapName);
-    const std::string path = getResourcePath(filename);
-
-    std::vector<char> buffer;
-    readFileToBuffer(path, buffer);
-
-    if (!buffer.empty())
+    if (strcmp(lpBitmapName, "CHARSET8C") == 0)
+      memcpy(lpvBits, _bmp_CHARSET8C, cb);
+    else if (strcmp(lpBitmapName, "CHARSET8M") == 0)
+      memcpy(lpvBits, _bmp_CHARSET8M, cb);
+    else if (strcmp(lpBitmapName, "CHARSET82") == 0)
+      memcpy(lpvBits, _bmp_CHARSET82, cb);
+    else
     {
-      int32_t width, height;
-      uint16_t bpp;
-      const char * data;
-      uint32_t size;
-      const bool res = getBitmapData(buffer, width, height, bpp, data, size);
-
-      if (res && height > 0 && size <= cb)
-      {
-        const size_t length = size / height;
-        // rows are stored upside down
-        char * out = static_cast<char *>(lpvBits);
-        for (size_t row = 0; row < height; ++row)
-        {
-          const char * src = data + row * length;
-          char * dst = out + (height - row - 1) * length;
-          memcpy(dst, src, length);
-        }
-        return;
-      }
+      log_cb(RETRO_LOG_INFO, "RA2: %s. Missing bitmap '%s'\n", __FUNCTION__, lpBitmapName);
+      memset(lpvBits, 0, cb);
     }
-
-    log_cb(RETRO_LOG_INFO, "RA2: %s. Missing bitmap '%s'\n", __FUNCTION__, lpBitmapName);
-    CommonFrame::GetBitmap(lpBitmapName, cb, lpvBits);
   }
 
   int RetroFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
   {
+    display_message(lpText, 60);
     log_cb(RETRO_LOG_INFO, "RA2: %s: %s - %s\n", __FUNCTION__, lpCaption, lpText);
     return IDOK;
+  }
+
+  BYTE* RetroFrame::GetResource(WORD id, LPCSTR lpType, DWORD expectedSize)
+  {
+      switch (id)
+      {
+      case IDR_APPLE2_ROM:
+          return _rom_Apple2;
+      case IDR_APPLE2_PLUS_ROM:
+          return _rom_Apple2_Plus;
+      case IDR_APPLE2_JPLUS_ROM:
+          return _rom_Apple2_JPlus;
+      case IDR_APPLE2E_ROM:
+          return _rom_Apple2e;
+      case IDR_APPLE2E_ENHANCED_ROM:
+          return _rom_Apple2e_Enhanced;
+      case IDR_PRAVETS_82_ROM:
+          return _rom_PRAVETS82;
+      case IDR_PRAVETS_8M_ROM:
+          return _rom_PRAVETS8M;
+      case IDR_PRAVETS_8C_ROM:
+          return _rom_PRAVETS8C;
+      case IDR_TK3000_2E_ROM:
+          return _rom_TK3000e;
+      case IDR_BASE_64A_ROM:
+          return _rom_Base64A;
+      default:
+          return NULL;
+      }
   }
 
   void RetroFrame::SetFullSpeed(const bool /* value */)
@@ -193,7 +218,7 @@ namespace ra2
   void RetroFrame::Begin()
   {
     const common2::RestoreCurrentDirectory restoreChDir;
-    common2::GNUFrame::Begin();
+    common2::CommonFrame::Begin();
   }
 
 

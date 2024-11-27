@@ -28,13 +28,23 @@ namespace
     return std::equal(prefix.begin(), prefix.end(), value.begin());
   }
 
+  static std::string fileStem(const std::string& path)
+  {
+      const size_t dotpos = path.find_last_of('.');
+      const size_t slashpos = path.find_last_of("/\\", dotpos);
+      if (slashpos == std::string::npos)
+          return path.substr(0, dotpos);
+
+      return path.substr(slashpos + 1, dotpos - slashpos - 1);
+  }
+
   void getLabelAndPath(const std::string & line, std::filesystem::path & path, std::string & label)
   {
     const size_t pos = line.find('|');
     if (pos == std::string::npos)
     {
       path = line;
-      label = path.stem();
+      label = fileStem(line);
     }
     else
     {
@@ -94,7 +104,8 @@ namespace ra2
       myImages.clear();
 
       const std::filesystem::path filePath(path);
-      myImages.push_back({filePath.native(), filePath.stem(), writeProtected, createIfNecessary});
+      DiskInfo diskInfo;
+      myImages.push_back({ filePath.u8string(), fileStem(filePath.u8string()), writeProtected, createIfNecessary });
       myEjected = false;
       return true;
     }
@@ -114,7 +125,7 @@ namespace ra2
     myImages.clear();
     const std::filesystem::path parent = playlistPath.parent_path();
     const std::filesystem::path savePath(ra2::save_directory);
-    const std::string playlistStem = playlistPath.stem();
+    const std::string playlistStem = fileStem(playlistPath.u8string());
 
     std::string line;
     while (std::getline(playlist, line))
@@ -139,7 +150,7 @@ namespace ra2
         const std::filesystem::path imagePath = savePath / filename;
 
         // TODO: this disk is NOT formatted
-        myImages.push_back({imagePath.native(), label, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE});
+        myImages.push_back({imagePath.u8string(), label, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE});
       }
       else if (!startsWith(line, M3U_COMMENT))
       {
@@ -151,7 +162,7 @@ namespace ra2
         {
           imagePath = parent / imagePath;
         }
-        myImages.push_back({imagePath.native(), label, IMAGE_FORCE_WRITE_PROTECTED, IMAGE_DONT_CREATE});
+        myImages.push_back({imagePath.u8string(), label, IMAGE_FORCE_WRITE_PROTECTED, IMAGE_DONT_CREATE});
       }
     }
 
@@ -285,8 +296,8 @@ namespace ra2
     {
       const std::filesystem::path filePath(path);
 
-      myImages[index].path = filePath.native();
-      myImages[index].label = filePath.stem();
+      myImages[index].path = filePath.u8string();
+      myImages[index].label = fileStem(filePath.u8string());
       myImages[index].writeProtected = IMAGE_FORCE_WRITE_PROTECTED;
       myImages[index].createIfNecessary = IMAGE_DONT_CREATE;
       return true;

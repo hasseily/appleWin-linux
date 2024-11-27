@@ -16,6 +16,8 @@
 
 #include "libretro.h"
 
+#ifndef APPLEWIN_ON_WINDOWS
+
 #define APPLEWIN_RETRO_CONF "/tmp/applewin.retro.conf"
 
 namespace
@@ -35,6 +37,8 @@ namespace
   }
 
 }
+
+#endif
 
 namespace ra2
 {
@@ -290,10 +294,12 @@ namespace ra2
       {
         myFrame->Cycle50ScanLines();
       }
+#ifndef APPLEWIN_ON_WINDOWS
       if (checkButton(RETRO_DEVICE_ID_JOYPAD_L2))
       {
         saveRegistryToINI(myRegistry);
       }
+#endif
       if (checkButton(RETRO_DEVICE_ID_JOYPAD_R2))
       {
         switch (myAudioSource)

@@ -22,7 +22,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "IPRaw.h"
 
-#ifndef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
+#include <winsock.h>
+#else
 #include <arpa/inet.h>
 #endif
 

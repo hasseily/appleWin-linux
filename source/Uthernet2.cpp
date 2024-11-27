@@ -43,10 +43,14 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // in the checks below we allow both in all cases
 // (errno == SOCK_EINPROGRESS || errno == SOCK_EWOULDBLOCK)
 // this works, bu we could instead define 2 functions and check only the correct one
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
 
+#ifndef _SSIZE_T_DEFINED
 typedef int ssize_t;
+#endif
 typedef int socklen_t;
+
+#include <winsock.h>
 
 #define sock_error() WSAGetLastError()
 // too complicated to call FormatMessage, just print number
@@ -197,7 +201,7 @@ void Socket::clearFD()
 {
     if (myFD != INVALID_SOCKET)
     {
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
         closesocket(myFD);
 #else
         close(myFD);
@@ -268,7 +272,7 @@ void Socket::process()
 {
     if (myFD != INVALID_SOCKET && mySocketStatus == W5100_SN_SR_SOCK_SYNSENT)
     {
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
         FD_SET writefds, exceptfds;
         FD_ZERO(&writefds);
         FD_ZERO(&exceptfds);
@@ -368,7 +372,7 @@ const std::string& Uthernet2::GetSnapshotCardName()
 
 Uthernet2::Uthernet2(UINT slot) : NetworkCard(CT_Uthernet2, slot)
 {
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
     WSADATA wsaData;
     myWSAStartup = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (myWSAStartup)
@@ -384,7 +388,7 @@ Uthernet2::Uthernet2(UINT slot) : NetworkCard(CT_Uthernet2, slot)
 
 Uthernet2::~Uthernet2()
 {
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
     if (myWSAStartup == 0)
     {
         WSACleanup();
@@ -917,7 +921,7 @@ void Uthernet2::openSystemSocket(const size_t i, const int type, const int proto
     }
     else
     {
-#ifdef _MSC_VER
+#ifdef APPLEWIN_ON_WINDOWS
         u_long on = 1;
         const int res = ioctlsocket(fd, FIONBIO, &on);
 #else

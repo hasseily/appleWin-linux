@@ -1,8 +1,8 @@
-#include "StdAfx.h"
 #include "frontends/libretro/rdirectsound.h"
 #include "frontends/libretro/environment.h"
 
 #include "linux/linuxinterface.h"
+#include "linux/libwindows/dsound.h"
 
 #include <unordered_map>
 #include <memory>
@@ -61,7 +61,7 @@ namespace
 
   DirectSoundGenerator::DirectSoundGenerator(LPCDSBUFFERDESC lpcDSBufferDesc)
     : IDirectSoundBuffer(lpcDSBufferDesc)
-    , myAudioSource(getAudioSourceFromName(myName))
+    , myAudioSource(getAudioSourceFromName("Spkr")) // TODO: where was it pulling myName from?
   {
   }
 

@@ -3,5 +3,9 @@ add_executable(testcpu6502
   ../../source/SynchronousEventManager.cpp
   TestCPU6502.cpp)
 
+if(WIN32)
+
+else()
   target_link_libraries(testcpu6502
     windows)
+endif()

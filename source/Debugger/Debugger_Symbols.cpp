@@ -659,7 +659,7 @@ int ParseSymbolTable(const std::string & pPathFileName, SymbolTable_Index_e eSym
 					, CHC_INFO
 					, CHC_ARG_SEP
 					, CHC_ADDRESS
-					, nAddress
+					, (unsigned)nAddress
 					, CHC_SYMBOL
 					, pSymbolPrev->c_str()
 					, CHC_DEFAULT
@@ -714,7 +714,7 @@ int ParseSymbolTable(const std::string & pPathFileName, SymbolTable_Index_e eSym
 				ConsolePrintFormat( "  %s$%s%04X %s%-31s%s"
 					, CHC_ARG_SEP
 					, CHC_ADDRESS
-					, nAddress
+					, (unsigned)nAddress
 					, CHC_SYMBOL
 					, sName
 					, CHC_DEFAULT

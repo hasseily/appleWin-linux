@@ -21,6 +21,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StdAfx.h"
 #include "Card.h"
 
+#ifdef APPLEWIN_ON_WINDOWS
+#include <winsock.h>
+#endif
+
 #include "Uthernet1.h"
 #include "Uthernet2.h"
 #include "Mockingboard.h"

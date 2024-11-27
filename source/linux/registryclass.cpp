@@ -1,6 +1,12 @@
+#include "StdAfx.h"
+
 #include "registryclass.h"
 #include "windows.h"
 #include "Log.h"
+
+#ifdef APPLEWIN_ON_WINDOWS
+#include <strsafe.h>
+#endif
 
 std::shared_ptr<Registry> Registry::instance;
 
