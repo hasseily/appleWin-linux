@@ -88,7 +88,7 @@ typedef UINT64 uint64_t;
 #include <vector>
 #include <cassert>
 
-#include "windows.h"
+#include "linux/libwindows/windows.h"
 
 //#define USE_SPEECH_API
 

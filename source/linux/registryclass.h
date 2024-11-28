@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef APPLEWIN_ON_WINDOWS
-#include "wincompat.h"
+#include "linux/libwindows/wincompat.h"
 #endif
 
 #include <string>

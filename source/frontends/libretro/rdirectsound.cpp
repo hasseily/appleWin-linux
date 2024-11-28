@@ -61,7 +61,7 @@ namespace
 
   DirectSoundGenerator::DirectSoundGenerator(LPCDSBUFFERDESC lpcDSBufferDesc)
     : IDirectSoundBuffer(lpcDSBufferDesc)
-    , myAudioSource(getAudioSourceFromName("Spkr")) // TODO: where was it pulling myName from?
+    , myAudioSource(getAudioSourceFromName(myName))
   {
   }
 
