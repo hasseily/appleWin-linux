@@ -72,6 +72,100 @@ VOICE::~VOICE(void)
 	}
 }
 
+class DSSoundBuffer : public SoundBufferBase
+{
+private:
+	LPDIRECTSOUNDBUFFER pBuffer;
+
+public:
+	HRESULT Init(DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, LPCSTR pDevName) override
+	{
+		if (!g_lpDS)
+			return E_FAIL;
+
+		WAVEFORMATEX wavfmt;
+		DSBUFFERDESC dsbdesc;
+
+		wavfmt.wFormatTag = WAVE_FORMAT_PCM;
+		wavfmt.nChannels = nChannels;
+		wavfmt.nSamplesPerSec = nSampleRate;
+		wavfmt.wBitsPerSample = 16;
+		wavfmt.nBlockAlign = wavfmt.nChannels == 1 ? 2 : 4;
+		wavfmt.nAvgBytesPerSec = wavfmt.nBlockAlign * wavfmt.nSamplesPerSec;
+
+		memset(&dsbdesc, 0, sizeof(dsbdesc));
+		dsbdesc.dwSize = sizeof(dsbdesc);
+		dsbdesc.dwBufferBytes = dwBufferSize;
+		dsbdesc.lpwfxFormat = &wavfmt;
+		dsbdesc.dwFlags = dwFlags | DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_STICKYFOCUS;
+
+		// Are buffers released when g_lpDS OR pVoice->lpDSBvoice is released?
+		// . From DirectX doc:
+		//   "Buffer objects are owned by the device object that created them. When the
+		//    device object is released, all buffers created by that object are also released..."
+		return g_lpDS->CreateSoundBuffer(&dsbdesc, &pBuffer, NULL);
+	}
+
+	HRESULT Release() override
+	{
+		if (!pBuffer)
+			return DS_OK;
+
+		HRESULT hr = pBuffer->Release();
+		pBuffer = NULL;
+		return hr;
+	}
+
+	HRESULT SetCurrentPosition(DWORD dwNewPosition) override
+	{
+		return pBuffer->SetCurrentPosition(dwNewPosition);
+	}
+
+	HRESULT GetCurrentPosition(LPDWORD lpdwCurrentPlayCursor, LPDWORD lpdwCurrentWriteCursor)
+	{
+		return pBuffer->GetCurrentPosition(lpdwCurrentPlayCursor, lpdwCurrentWriteCursor);
+	}
+
+	HRESULT Lock(DWORD dwWriteCursor, DWORD dwWriteBytes, LPVOID* lplpvAudioPtr1, DWORD* lpdwAudioBytes1, LPVOID* lplpvAudioPtr2, DWORD* lpdwAudioBytes2, DWORD dwFlags)
+	{
+		return pBuffer->Lock(dwWriteCursor, dwWriteBytes, lplpvAudioPtr1, lpdwAudioBytes1, lplpvAudioPtr2, lpdwAudioBytes2, dwFlags);
+	}
+
+	HRESULT Unlock(LPVOID lpvAudioPtr1, DWORD dwAudioBytes1, LPVOID lpvAudioPtr2, DWORD dwAudioBytes2)
+	{
+		return pBuffer->Unlock(lpvAudioPtr1, dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
+	}
+
+	HRESULT Stop()
+	{
+		return pBuffer->Stop();
+	}
+
+	HRESULT Play(DWORD dwReserved1, DWORD dwReserved2, DWORD dwFlags)
+	{
+		return pBuffer->Play(dwReserved1, dwReserved2, dwFlags);
+	}
+
+	HRESULT SetVolume(LONG lVolume)
+	{
+		return pBuffer->SetVolume(lVolume);
+	}
+
+	HRESULT GetVolume(LONG* lplVolume)
+	{
+		return pBuffer->GetVolume(lplVolume);
+	}
+
+	HRESULT GetStatus(LPDWORD lpdwStatus)
+	{
+		return pBuffer->GetStatus(lpdwStatus);
+	}
+
+	HRESULT Restore()
+	{
+		return pBuffer->Restore();
+	}
+};
 
 //-----------------------------------------------------------------------------
 
@@ -139,7 +233,7 @@ static const char *DirectSound_ErrorText (HRESULT error)
 
 //-----------------------------------------------------------------------------
 
-HRESULT DSGetLock(LPDIRECTSOUNDBUFFER pVoice, DWORD dwOffset, DWORD dwBytes,
+HRESULT DSGetLock(SoundBufferBase* pVoice, DWORD dwOffset, DWORD dwBytes,
 					  SHORT** ppDSLockedBuffer0, DWORD* pdwDSLockedBufferSize0,
 					  SHORT** ppDSLockedBuffer1, DWORD* pdwDSLockedBufferSize1)
 {
@@ -182,39 +276,25 @@ HRESULT DSGetLock(LPDIRECTSOUNDBUFFER pVoice, DWORD dwOffset, DWORD dwBytes,
 
 //-----------------------------------------------------------------------------
 
+SoundBufferBase::CreateSoundBufferFunc SoundBufferBase::Create = NULL;
+
+static SoundBufferBase* CreateSoundBuffer(void)
+{
+	return new DSSoundBuffer();
+}
+
 HRESULT DSGetSoundBuffer(VOICE* pVoice, DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, const char* pszDevName)
 {
-	if (!g_lpDS)
-		return E_FAIL;
-
 	pVoice->name = pszDevName;
 
-	WAVEFORMATEX wavfmt;
-	DSBUFFERDESC dsbdesc;
+	SoundBufferBase* soundBuffer = SoundBufferBase::Create();
 
-	wavfmt.wFormatTag = WAVE_FORMAT_PCM;
-	wavfmt.nChannels = nChannels;
-	wavfmt.nSamplesPerSec = nSampleRate;
-	wavfmt.wBitsPerSample = 16;
-	wavfmt.nBlockAlign = wavfmt.nChannels==1 ? 2 : 4;
-	wavfmt.nAvgBytesPerSec = wavfmt.nBlockAlign * wavfmt.nSamplesPerSec;
-
-	memset (&dsbdesc, 0, sizeof (dsbdesc));
-	dsbdesc.dwSize = sizeof (dsbdesc);
-	dsbdesc.dwBufferBytes = dwBufferSize;
-	dsbdesc.lpwfxFormat = &wavfmt;
-	dsbdesc.dwFlags = dwFlags | DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_STICKYFOCUS;
-	dsbdesc.szName = pszDevName;
-
-	// Are buffers released when g_lpDS OR pVoice->lpDSBvoice is released?
-	// . From DirectX doc:
-	//   "Buffer objects are owned by the device object that created them. When the
-	//    device object is released, all buffers created by that object are also released..."
-	HRESULT hr = g_lpDS->CreateSoundBuffer(&dsbdesc, &pVoice->lpDSBvoice, NULL);
-	if(FAILED(hr))
+	HRESULT hr = soundBuffer->Init(dwFlags, dwBufferSize, nSampleRate, nChannels, pszDevName);
+	if (FAILED(hr))
 		return hr;
 
 	//
+	pVoice->lpDSBvoice = soundBuffer;
 
 	_ASSERT(g_uNumVoices < uMAX_VOICES);
 	if(g_uNumVoices < uMAX_VOICES)
@@ -517,6 +597,8 @@ void SoundCore_TweakVolumes()
 
 //-----------------------------------------------------------------------------
 
+#ifdef _MSC_VER
+
 static UINT g_uDSInitRefCount = 0;
 
 bool DSInit()
@@ -526,6 +608,8 @@ bool DSInit()
 		g_uDSInitRefCount++;
 		return true;		// Already initialised successfully
 	}
+
+	SoundBufferBase::Create = CreateSoundBuffer;
 
 	num_sound_devices = 0;
 	HRESULT hr = DirectSoundEnumerate((LPDSENUMCALLBACK)DSEnumProc, NULL);
@@ -611,6 +695,8 @@ void DSUninit()
 
 	SoundCore_StopTimer();
 }
+
+#endif
 
 //-----------------------------------------------------------------------------
 

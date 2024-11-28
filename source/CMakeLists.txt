@@ -106,6 +106,7 @@ set(SOURCE_FILES
   linux/paddle.cpp
   linux/registryclass.cpp
   linux/resources.cpp
+  linux/soundbuffer.cpp
   linux/version.cpp
 
   linux/duplicates/Debugger_Display.cpp

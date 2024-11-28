@@ -16,14 +16,6 @@ set(SOURCE_FILES
   serialisation.cpp
   )
 
-if (WIN32)
-  # WIN32 build doesn't link against libwindows, but rdirectsound needs a subclass from dsound, which needs guiddef.
-  set(SOURCE_FILES ${SOURCE_FILES}
-    ../../linux/libwindows/dsound.cpp
-    ../../linux/libwindows/guiddef.cpp
-    )
-endif()
-
 macro(add_resource output source)
   set(add_resource_command "./resource2inl.sh ../../../resource/${source} ${output}")
   add_custom_command(
