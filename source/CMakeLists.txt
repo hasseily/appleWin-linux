@@ -239,6 +239,9 @@ if(WIN32)
   if(EXISTS "${MINIZIP_LIBRARY_DIRS}/libminizip.a")
     set(MINIZIP_LIBRARIES -L${MINIZIP_LIBRARY_DIRS};libminizip.a;libz.a;libbz2.a)
   endif()
+  if(EXISTS "${SLIRP_LIBDIR}/libslirp.a")
+    set(SLIRP_LIBRARIES -L${SLIRP_LIBDIR};libslirp.a;libintl.a)
+  endif()
 else()
   set(SOURCE_FILES_PLATFORM
     linux/benchmark.cpp
