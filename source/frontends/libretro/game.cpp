@@ -50,7 +50,7 @@ namespace ra2
     , myAudioSource(AudioSource::UNKNOWN)
     , myKeyboardType(KeyboardType::ASCII)
   {
-    myLoggerContext = std::make_shared<LoggerContext>(true);
+    myLoggerContext = std::make_shared<LoggerContext>(false);
     myRegistry = CreateRetroRegistry();
     myRegistryContext = std::make_shared<RegistryContext>(myRegistry);
 
