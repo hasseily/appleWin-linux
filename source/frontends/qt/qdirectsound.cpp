@@ -2,7 +2,6 @@
 
 #include "loggingcategory.h"
 #include "windows.h"
-#include "linux/linuxinterface.h"
 #include <unordered_map>
 #include <memory>
 

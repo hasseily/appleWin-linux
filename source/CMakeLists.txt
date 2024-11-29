@@ -252,7 +252,6 @@ else()
 
   set(HEADER_FILES_PLATFORM
     linux/resources.h
-    linux/linuxinterface.h
     linux/benchmark.h
     linux/paddle.h
     linux/version.h

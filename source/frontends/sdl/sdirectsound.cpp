@@ -4,7 +4,6 @@
 #include "frontends/common2/programoptions.h"
 
 #include "windows.h"
-#include "linux/linuxinterface.h"
 
 #include "Core.h"
 #include "SoundCore.h"
