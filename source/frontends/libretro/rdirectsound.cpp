@@ -62,8 +62,8 @@ namespace
 
   HRESULT SoundGenerator::Init(DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, LPCSTR pDevName)
   {
-      myAudioSource = getAudioSourceFromName(pDevName);
-      return SoundBuffer::Init(dwFlags, dwBufferSize, nSampleRate, nChannels, pDevName);
+    myAudioSource = getAudioSourceFromName(pDevName);
+    return SoundBuffer::Init(dwFlags, dwBufferSize, nSampleRate, nChannels, pDevName);
   }
 
   HRESULT SoundGenerator::Release()

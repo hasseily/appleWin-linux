@@ -32,10 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "CardManager.h"
 #include "Registry.h"
 
-#ifdef APPLEWIN_ON_WINDOWS
-#include <winsock.h>
-#endif
-
 #include "Disk.h"
 #include "FourPlay.h"
 #include "Harddisk.h"

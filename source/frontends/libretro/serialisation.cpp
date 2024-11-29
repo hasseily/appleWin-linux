@@ -8,7 +8,7 @@
 #include <fstream>
 #include <unistd.h>
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 #include <fileapi.h>
 #endif
 
@@ -29,7 +29,7 @@ namespace
 
   AutoFile::AutoFile()
   {
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
     CHAR szTempFileName[MAX_PATH];
     CHAR lpTempPathBuffer[MAX_PATH];
 

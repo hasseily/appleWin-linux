@@ -85,7 +85,7 @@ namespace common2
 
   std::string GetHomeDir()
   {
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
     char self[1024];
     if (GetModuleFileNameA(0, self, sizeof(self)) >= sizeof(self))
     {
@@ -106,7 +106,7 @@ namespace common2
 
   std::string GetConfigFile(const std::string & filename)
   {
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
     return GetHomeDir() + "/" + filename;
 #else
     const std::string dir = GetHomeDir() + "/.applewin";
@@ -133,8 +133,8 @@ namespace common2
 
     if (options.useQtIni)
     {
-#ifdef APPLEWIN_ON_WINDOWS
-      filename = homeDir + "/" + APPLICATION_NAME + ".conf";
+#ifdef _WIN32
+      filename = homeDir + "\\" + APPLICATION_NAME + ".conf";
 #else
       filename = homeDir + "/.config/" + ORGANIZATION_NAME + "/" + APPLICATION_NAME + ".conf";
 #endif

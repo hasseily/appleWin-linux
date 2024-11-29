@@ -45,7 +45,7 @@ namespace
 
     char self[1024] = {0};
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
     int ch = GetModuleFileNameA(0, self, sizeof(self));
     if (ch >= sizeof(self))
         ch = -1;

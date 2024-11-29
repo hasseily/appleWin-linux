@@ -2,7 +2,7 @@
 
 #include "Card.h"
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 #include <winsock.h>
 #endif
 

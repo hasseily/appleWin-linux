@@ -1,6 +1,5 @@
 #include "dsound.h"
 
-#include "linux/linuxinterface.h"
 #include "linux/soundbuffer.h"
 
 #include <cstring>

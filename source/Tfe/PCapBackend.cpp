@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Common.h"
 #include "../Registry.h"
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 #include <winsock.h>
 #include <iphlpapi.h>
 #endif
@@ -77,7 +77,7 @@ void PCapBackend::update(const ULONG /* nExecutedCycles */)
 void PCapBackend::getMACAddress(const uint32_t address, MACAddress & mac)
 {
     // this is only expected to be called for IP addresses on the same network
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
     const DWORD dwSourceAddress = INADDR_ANY;
     ULONG len = sizeof(MACAddress::address);
     SendARP(address, dwSourceAddress, mac.address, &len);

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "linux/linuxframe.h"
 #include "linux/context.h"
-#ifndef APPLEWIN_ON_WINDOWS
+#ifndef _WIN32
 #include "linux/network/slirp2.h"
 #endif
 #include "linux/version.h"
@@ -155,7 +155,7 @@ void LinuxFrame::LoadSnapshot()
 
 std::shared_ptr<NetworkBackend> LinuxFrame::CreateNetworkBackend(const std::string & interfaceName)
 {
-#ifndef APPLEWIN_ON_WINDOWS
+#ifndef _WIN32
  #ifdef U2_USE_SLIRP
   return std::make_shared<SlirpBackend>();
  #else
@@ -166,7 +166,7 @@ std::shared_ptr<NetworkBackend> LinuxFrame::CreateNetworkBackend(const std::stri
 #endif
 }
 
-#ifndef APPLEWIN_ON_WINDOWS
+#ifndef _WIN32
 int MessageBox(HWND, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 {
   return GetFrame().FrameMessageBox(lpText, lpCaption, uType);

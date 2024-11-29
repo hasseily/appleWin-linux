@@ -4,18 +4,18 @@
 
 HRESULT SoundBuffer::Init(DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, LPCSTR pDevName)
 {
-    myBufferSize = dwBufferSize;
-    mySoundBuffer.resize(dwBufferSize);
-    myNumberOfUnderruns = 0;
-    mySampleRate = nSampleRate;
-    myChannels = nChannels;
+  myBufferSize = dwBufferSize;
+  mySoundBuffer.resize(dwBufferSize);
+  myNumberOfUnderruns = 0;
+  mySampleRate = nSampleRate;
+  myChannels = nChannels;
 
-    return DS_OK;
+  return DS_OK;
 }
 
 HRESULT SoundBuffer::Release()
 {
-    return DS_OK;
+  return DS_OK;
 }
 
 HRESULT SoundBuffer::Unlock( LPVOID lpvAudioPtr1, DWORD dwAudioBytes1, LPVOID lpvAudioPtr2, DWORD dwAudioBytes2 )

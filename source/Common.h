@@ -140,7 +140,7 @@ enum AppMode_e
 #define WM_USER_FULLSCREEN	WM_USER+8
 #define VK_SNAPSHOT_TEXT	WM_USER+9 // PrintScreen+Ctrl
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 #define PATH_SEPARATOR '\\'
 #else
 #define PATH_SEPARATOR '/'

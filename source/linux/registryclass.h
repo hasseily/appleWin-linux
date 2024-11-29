@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef APPLEWIN_ON_WINDOWS
+#ifndef _WIN32
 #include "linux/libwindows/wincompat.h"
 #endif
 
@@ -8,7 +8,6 @@
 #include <map>
 #include <memory>
 #include <cstring>
-
 
 class Registry
 {

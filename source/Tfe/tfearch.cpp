@@ -27,7 +27,7 @@
 
 /* #define WPCAP */
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -59,7 +59,7 @@
 // once this is set, no further attempts to load npcap will be made
 static int tfe_cannot_use = 0;
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 
 typedef pcap_t	*(*pcap_open_live_t)(const char *, int, int, int, char *);
 typedef void (*pcap_close_t)(pcap_t *);

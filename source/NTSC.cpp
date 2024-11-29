@@ -49,7 +49,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Defines
 	#define HGR_TEST_PATTERN 0
 
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _MSC_VER
 	#define INLINE __forceinline
 #else
 	#define INLINE inline

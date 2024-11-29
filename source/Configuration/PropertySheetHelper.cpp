@@ -37,10 +37,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../Uthernet2.h"
 #include "../Tfe/PCapBackend.h"
 
-#ifdef APPLEWIN_ON_WINDOWS
-#include <commdlg.h>
-#endif
-
 /*
 Config causing AfterClose msgs:
 ===============================

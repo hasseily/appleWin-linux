@@ -5,11 +5,7 @@
 
 #pragma once
 
-#if defined (_MSC_VER) || defined (__MINGW32__)
-#define APPLEWIN_ON_WINDOWS
-#endif
-
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -30,11 +26,11 @@ typedef UINT64 uint64_t;
 
 #include <string>
 
-#else
+#else // !_WIN32
 
 #include <cstring>
 #include <cstdlib>
 #include "windows.h"
 #include <string>
 
-#endif
+#endif // _WIN32

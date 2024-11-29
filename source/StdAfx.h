@@ -1,8 +1,4 @@
-#if defined (_MSC_VER) || defined (__MINGW32__)
- #define APPLEWIN_ON_WINDOWS
-#endif
-
-#ifdef APPLEWIN_ON_WINDOWS
+#ifdef _WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -40,6 +36,7 @@ typedef UINT64 uint64_t;
 #include <shlwapi.h>
 #include <strsafe.h>
 #include <commctrl.h>
+#include <commdlg.h>
 #include <ddraw.h>
 #include <htmlhelp.h>
 #include <assert.h>
@@ -75,7 +72,7 @@ typedef UINT64 uint64_t;
 #define PTRDIFF_T_FMT "td"
 #endif
 
-#else
+#else // !_WIN32
 
 #include <cmath>
 #include <map>
@@ -95,4 +92,4 @@ typedef UINT64 uint64_t;
 #define SIZE_T_FMT "zu"
 #define PTRDIFF_T_FMT "td"
 
-#endif
+#endif // _WIN32
