@@ -5,6 +5,7 @@
 
 namespace common2
 {
+  struct EmulatorOptions;
 
   class GNUFrame : public CommonFrame
   {

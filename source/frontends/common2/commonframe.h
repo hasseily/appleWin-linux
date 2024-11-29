@@ -11,12 +11,11 @@
 
 namespace common2
 {
-  struct EmulatorOptions;
 
   class CommonFrame : public LinuxFrame
   {
   public:
-    CommonFrame(const EmulatorOptions & options);
+    CommonFrame(bool autoBoot, bool fixedSpeed, bool syncWithTimer, bool allowVideoUpdate);
 
     void Begin() override;
 

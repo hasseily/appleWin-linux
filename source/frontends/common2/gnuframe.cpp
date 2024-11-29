@@ -89,9 +89,8 @@ namespace
 
 namespace common2
 {
-
   GNUFrame::GNUFrame(const EmulatorOptions & options)
-  : CommonFrame(options)
+  : CommonFrame(options.autoBoot, options.fixedSpeed, options.syncWithTimer, !options.noVideoUpdate)
   , myHomeDir(GetHomeDir())
   , myResourceFolder(getResourceFolder("/resource/"))
   {

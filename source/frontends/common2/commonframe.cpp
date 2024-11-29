@@ -16,11 +16,11 @@
 namespace common2
 {
 
-  CommonFrame::CommonFrame(const EmulatorOptions & options)
-    : LinuxFrame(options.autoBoot)
-    , mySpeed(options.fixedSpeed)
-    , mySynchroniseWithTimer(options.syncWithTimer)
-    , myAllowVideoUpdate(!options.noVideoUpdate)
+  CommonFrame::CommonFrame(bool autoBoot, bool fixedSpeed, bool syncWithTimer, bool allowVideoUpdate)
+    : LinuxFrame(autoBoot)
+    , mySpeed(fixedSpeed)
+    , mySynchroniseWithTimer(syncWithTimer)
+    , myAllowVideoUpdate(allowVideoUpdate)
   {
     myLastSync = std::chrono::steady_clock::now();
   }

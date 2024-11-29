@@ -279,7 +279,6 @@ endif()
 target_include_directories(appleii PRIVATE
   ${YAML_INCLUDE_DIRS}
   ${PCAP_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
   ${SLIRP_INCLUDE_DIRS}
   Debugger
   )

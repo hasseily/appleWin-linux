@@ -78,18 +78,13 @@ namespace
 namespace ra2
 {
 
-  RetroFrame::RetroFrame(const common2::EmulatorOptions & options)
-  : common2::CommonFrame(options)
+  RetroFrame::RetroFrame()
+  : common2::CommonFrame(true, true, false, true)
   {
   }
 
   void RetroFrame::FrameRefreshStatus(int drawflags)
   {
-    if (drawflags & DRAW_TITLE)
-    {
-      GetAppleWindowTitle();
-      display_message(g_pAppTitle.c_str());
-    }
   }
 
   void RetroFrame::VideoPresentScreen()

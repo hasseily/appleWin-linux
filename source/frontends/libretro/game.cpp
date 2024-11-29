@@ -4,8 +4,6 @@
 #include "frontends/libretro/retroframe.h"
 #include "frontends/libretro/rkeyboard.h"
 #include "frontends/common2/utils.h"
-#include "frontends/common2/ptreeregistry.h"
-#include "frontends/common2/programoptions.h"
 
 #include "Common.h"
 #include "Interface.h"
@@ -13,6 +11,7 @@
 #include "linux/keyboardbuffer.h"
 #include "linux/paddle.h"
 #include "linux/context.h"
+#include "linux/registryclass.h"
 
 #include "libretro.h"
 
@@ -55,9 +54,7 @@ namespace ra2
     myRegistry = CreateRetroRegistry();
     myRegistryContext = std::make_shared<RegistryContext>(myRegistry);
 
-    common2::EmulatorOptions defaultOptions;
-    defaultOptions.fixedSpeed = true;
-    myFrame = std::make_shared<ra2::RetroFrame>(defaultOptions);
+    myFrame = std::make_shared<ra2::RetroFrame>();
 
     refreshVariables();
 
