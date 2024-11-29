@@ -18,7 +18,7 @@ set(HEADER_FILES
   speed.h
   )
 
-if (NOT BUILD_LIBRETRO)
+if (BUILD_APPLEN OR BUILD_QAPPLE OR BUILD_SA2)
   set(SOURCE_FILES ${SOURCE_FILES}
     fileregistry.cpp
     gnuframe.cpp
@@ -48,7 +48,9 @@ target_link_libraries(common2 PRIVATE
   appleii
 )
 
-if (NOT BUILD_LIBRETRO)
+if (BUILD_APPLEN OR BUILD_QAPPLE OR BUILD_SA2)
+  # boost is needed by programoptions and ptreeregistry, which aren't used
+  # by libretro. need better separation of libretro common and linux common
   find_package(Boost REQUIRED
     COMPONENTS program_options
     )

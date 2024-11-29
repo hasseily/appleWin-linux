@@ -2,6 +2,7 @@
 
 #include "frontends/common2/gnuframe.h"
 #include "frontends/common2/fileregistry.h"
+#include "frontends/common2/programoptions.h"
 
 #include "linux/resources.h"
 

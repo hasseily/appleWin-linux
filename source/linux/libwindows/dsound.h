@@ -56,12 +56,45 @@
 typedef BOOL (CALLBACK *LPDSENUMCALLBACK)(LPGUID,LPCSTR,LPCSTR,LPVOID);
 HRESULT DirectSoundEnumerate(LPDSENUMCALLBACK lpDSEnumCallback, LPVOID lpContext);
 
+typedef struct {
+  DWORD  dwSize;
+  DWORD  dwFlags;
+  DWORD  dwFormats;
+  DWORD  dwChannels;
+} DSCCAPS, DSCAPS, *LPDSCCAPS;
+typedef const DSCCAPS *LPCDSCCAPS;
+
+typedef struct _DSBUFFERDESC
+{
+  DWORD		dwSize;
+  DWORD		dwFlags;
+  DWORD		dwBufferBytes;
+  DWORD		dwReserved;
+  LPWAVEFORMATEX	lpwfxFormat;
+  GUID		guid3DAlgorithm;
+} DSBUFFERDESC,*LPDSBUFFERDESC;
+typedef const DSBUFFERDESC *LPCDSBUFFERDESC;
+
+typedef struct _DSBPOSITIONNOTIFY
+{
+  DWORD	dwOffset;
+  HANDLE	hEventNotify;
+} DSBPOSITIONNOTIFY,*LPDSBPOSITIONNOTIFY;
+typedef const DSBPOSITIONNOTIFY *LPCDSBPOSITIONNOTIFY;
+
+struct IDirectSoundNotify
+{
+};
+typedef struct IDirectSoundNotify *LPDIRECTSOUNDNOTIFY,**LPLPDIRECTSOUNDNOTIFY;
+
 typedef class SoundBuffer *LPDIRECTSOUNDBUFFER,**LPLPDIRECTSOUNDBUFFER;
 
-struct MockDirectSound
+struct IDirectSound : public IAutoRelease
 {
-	int i;
+  HRESULT CreateSoundBuffer( LPCDSBUFFERDESC lpcDSBufferDesc, LPLPDIRECTSOUNDBUFFER lplpDirectSoundBuffer, IUnknown FAR* pUnkOuter );		int i;
+  HRESULT SetCooperativeLevel( HWND hwnd, DWORD dwLevel );
+  HRESULT GetCaps(LPDSCCAPS pDSCCaps);
 };
-typedef struct MockDirectSound *LPDIRECTSOUND;
+typedef struct IDirectSound *LPDIRECTSOUND;
 
 HRESULT WINAPI DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND* ppDS, LPUNKNOWN pUnkOuter);

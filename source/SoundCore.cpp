@@ -72,6 +72,8 @@ VOICE::~VOICE(void)
 	}
 }
 
+#ifdef _MSC_VER
+
 class DSSoundBuffer : public SoundBufferBase
 {
 private:
@@ -231,6 +233,8 @@ static const char *DirectSound_ErrorText (HRESULT error)
 }
 #endif
 
+#endif // _MSC_VER
+
 //-----------------------------------------------------------------------------
 
 HRESULT DSGetLock(SoundBufferBase* pVoice, DWORD dwOffset, DWORD dwBytes,
@@ -277,11 +281,6 @@ HRESULT DSGetLock(SoundBufferBase* pVoice, DWORD dwOffset, DWORD dwBytes,
 //-----------------------------------------------------------------------------
 
 SoundBufferBase::CreateSoundBufferFunc SoundBufferBase::Create = NULL;
-
-static SoundBufferBase* CreateSoundBuffer(void)
-{
-	return new DSSoundBuffer();
-}
 
 HRESULT DSGetSoundBuffer(VOICE* pVoice, DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, const char* pszDevName)
 {
@@ -598,6 +597,11 @@ void SoundCore_TweakVolumes()
 //-----------------------------------------------------------------------------
 
 #ifdef _MSC_VER
+
+static SoundBufferBase* CreateSoundBuffer(void)
+{
+	return new DSSoundBuffer();
+}
 
 static UINT g_uDSInitRefCount = 0;
 
