@@ -11,7 +11,6 @@ struct MACAddress;
 struct Socket
 {
 #ifdef _WIN32
-    typedef UINT_PTR SOCKET;
     typedef SOCKET socket_t;
 #else
     typedef int socket_t;

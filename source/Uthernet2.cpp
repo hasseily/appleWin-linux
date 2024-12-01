@@ -50,8 +50,6 @@ typedef int ssize_t;
 #endif
 typedef int socklen_t;
 
-#include <winsock.h>
-
 #define sock_error() WSAGetLastError()
 // too complicated to call FormatMessage, just print number
 #define ERROR_FMT "d"

@@ -112,7 +112,7 @@ void LoadConfiguration(bool loadImages)
 
 		if (dwLoadedComputerType != dwComputerType)
 		{
-			std::string strText = StrFormat("Unsupported Apple2Type(%d). Changing to %d", (int)dwLoadedComputerType, (int)dwComputerType);
+			std::string strText = StrFormat("Unsupported Apple2Type(%d). Changing to %d", dwLoadedComputerType, dwComputerType);
 
 			LogFileOutput("%s\n", strText.c_str());
 
