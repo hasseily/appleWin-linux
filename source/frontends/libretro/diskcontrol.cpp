@@ -28,23 +28,13 @@ namespace
     return std::equal(prefix.begin(), prefix.end(), value.begin());
   }
 
-  static std::string fileStem(const std::string& path)
-  {
-      const size_t dotpos = path.find_last_of('.');
-      const size_t slashpos = path.find_last_of("/\\", dotpos);
-      if (slashpos == std::string::npos)
-          return path.substr(0, dotpos);
-
-      return path.substr(slashpos + 1, dotpos - slashpos - 1);
-  }
-
   void getLabelAndPath(const std::string & line, std::filesystem::path & path, std::string & label)
   {
     const size_t pos = line.find('|');
     if (pos == std::string::npos)
     {
       path = line;
-      label = fileStem(line);
+      label = path.stem().u8string();
     }
     else
     {
@@ -90,7 +80,7 @@ namespace ra2
     // a bit of a workaround to a save state issue, where the disk folder is lost
     // this will only support 1 disk
     const std::filesystem::path filePath(path);
-    myCurrentDiskFolder = filePath.parent_path().string();
+    myCurrentDiskFolder = filePath.parent_path().u8string();
   }
 
   bool DiskControl::insertDisk(const std::string & path)
@@ -105,7 +95,7 @@ namespace ra2
 
       const std::filesystem::path filePath(path);
       DiskInfo diskInfo;
-      myImages.push_back({ filePath.u8string(), fileStem(filePath.u8string()), writeProtected, createIfNecessary });
+      myImages.push_back({ filePath.u8string(), filePath.stem().u8string(), writeProtected, createIfNecessary });
       myEjected = false;
       return true;
     }
@@ -125,7 +115,7 @@ namespace ra2
     myImages.clear();
     const std::filesystem::path parent = playlistPath.parent_path();
     const std::filesystem::path savePath(ra2::save_directory);
-    const std::string playlistStem = fileStem(playlistPath.u8string());
+    const std::string playlistStem = playlistPath.stem().u8string();
 
     std::string line;
     while (std::getline(playlist, line))
@@ -297,7 +287,7 @@ namespace ra2
       const std::filesystem::path filePath(path);
 
       myImages[index].path = filePath.u8string();
-      myImages[index].label = fileStem(filePath.u8string());
+      myImages[index].label = filePath.stem().u8string();
       myImages[index].writeProtected = IMAGE_FORCE_WRITE_PROTECTED;
       myImages[index].createIfNecessary = IMAGE_DONT_CREATE;
       return true;
