@@ -2,10 +2,6 @@
 
 #include "Card.h"
 
-#ifdef _WIN32
-#include <winsock.h>
-#endif
-
 enum {COMMEVT_WAIT=0, COMMEVT_ACK, COMMEVT_TERM, COMMEVT_MAX};
 enum eFWMODE {FWMODE_CIC=0, FWMODE_SIC_P8, FWMODE_PPC, FWMODE_SIC_P8A};	// NB. CIC = SSC
 

@@ -1,8 +1,5 @@
 #ifdef _WIN32
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #ifdef __MINGW32__
 #define STRSAFE_NO_DEPRECATE
 #endif
@@ -14,7 +11,6 @@
 // maintenance perhaps)
 // <strmif.h> *must* be included before <dsound.h> for x64 to work.
 #include <strmif.h>
-#include <mmeapi.h>
 #include <dsound.h>
 #include <dshow.h>
 
@@ -32,11 +28,11 @@ typedef UINT32 uint32_t;
 typedef UINT64 uint64_t;
 #endif
 
+#include <windows.h>
 #include <winuser.h> // WM_MOUSEWHEEL
 #include <shlwapi.h>
 #include <strsafe.h>
 #include <commctrl.h>
-#include <commdlg.h>
 #include <ddraw.h>
 #include <htmlhelp.h>
 #include <assert.h>

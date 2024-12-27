@@ -36,13 +36,13 @@ namespace
     DWORD dwRetVal = GetTempPathA(MAX_PATH, lpTempPathBuffer);
     if (dwRetVal > MAX_PATH || (dwRetVal == 0))
     {
-        throw std::runtime_error("Cannot create temporary file");
+      throw std::runtime_error("Cannot create temporary file");
     }
 
     UINT uRetVal = GetTempFileNameA(lpTempPathBuffer, "aws", 1, szTempFileName);
     if (uRetVal == 0)
     {
-        throw std::runtime_error("Cannot create temporary file");
+      throw std::runtime_error("Cannot create temporary file");
     }
 
     myFilename = szTempFileName;
