@@ -40,6 +40,7 @@ typedef UINT64 uint64_t;
 #include <ddraw.h>
 #include <htmlhelp.h>
 #include <assert.h>
+#include <winsock.h>
 
 #include <algorithm>
 #include <map>
@@ -67,9 +68,11 @@ typedef UINT64 uint64_t;
 #define SIZE_T_FMT "lu"
 #define PTRDIFF_T_FMT "ld"
 #endif
+#define DWORD_T_FMT "lX"
 #else
 #define SIZE_T_FMT "zu"
 #define PTRDIFF_T_FMT "td"
+#define DWORD_T_FMT "lX"
 #endif
 
 #else // !_WIN32
@@ -85,11 +88,14 @@ typedef UINT64 uint64_t;
 #include <vector>
 #include <cassert>
 
-#include "linux/libwindows/windows.h"
+// NOTE: this is a local version of windows.h with aliases for windows functions when not
+//       building in a windows environment (!_WIN32)
+#include "windows.h"
 
 //#define USE_SPEECH_API
 
 #define SIZE_T_FMT "zu"
 #define PTRDIFF_T_FMT "td"
+#define DWORD_T_FMT "X"
 
 #endif // _WIN32

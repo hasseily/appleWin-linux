@@ -5,7 +5,15 @@
 #include <unordered_map>
 #include <memory>
 
+#include <QIODevice>
+#include <QAudioFormat>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QAudioOutput>
+typedef QAudioOutput QAudioSink;
+#else
+#include <QAudioSink>
+#endif
 
 namespace
 {
@@ -31,7 +39,7 @@ namespace
         virtual qint64 writeData(const char *data, qint64 len) override;
 
     private:
-        std::shared_ptr<QAudioOutput> myAudioOutput;
+        std::shared_ptr<QAudioSink> myAudioOutput;
     };
 
     std::unordered_map<SoundBuffer *, std::shared_ptr<DirectSoundGenerator> > activeSoundGenerators;
@@ -47,13 +55,19 @@ namespace
         QAudioFormat audioFormat;
         audioFormat.setSampleRate(nSampleRate);
         audioFormat.setChannelCount(nChannels);
-        audioFormat.setSampleSize(16);
+
+        Q_ASSERT(myBitsPerSample == 16);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        audioFormat.setSampleSize(myBitsPerSample);
         audioFormat.setCodec(QString::fromUtf8("audio/pcm"));
         audioFormat.setByteOrder(QAudioFormat::LittleEndian);
         audioFormat.setSampleType(QAudioFormat::SignedInt);
-
-        myAudioOutput = std::make_shared<QAudioOutput>(audioFormat);
-        return SoundBuffer::Init(dwFlags, dwBufferSize, nSampleRate, nChannels, pDevName);
+        myAudioOutput = std::make_shared<QAudioSink>(audioFormat);
+#else
+        audioFormat.setSampleFormat(QAudioFormat::Int16);
+        myAudioOutput = std::make_shared<QAudioSink>(audioFormat);
+#endif
     }
 
     DirectSoundGenerator::~DirectSoundGenerator()
@@ -139,13 +153,14 @@ namespace
     QDirectSound::SoundInfo DirectSoundGenerator::getInfo()
     {
         QDirectSound::SoundInfo info;
+        info.name = myName;
         info.running = QIODevice::isOpen();
         info.channels = myChannels;
         info.numberOfUnderruns = GetBufferUnderruns();
 
         if (info.running)
         {
-            const DWORD bytesInBuffer = GetBytesInBuffer();
+            const uint32_t bytesInBuffer = GetBytesInBuffer();
             const auto & format = myAudioOutput->format();
             info.buffer = format.durationForBytes(bytesInBuffer) / 1000;
             info.size = format.durationForBytes(myBufferSize) / 1000;

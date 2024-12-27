@@ -21,7 +21,7 @@ namespace ra2
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
 
     std::string Video_GetScreenShotFolder() const override { return std::string(""); }
-    BYTE* GetResource(WORD id, LPCSTR lpType, DWORD expectedSize) override;
+    BYTE* GetResource(WORD id, LPCSTR lpType, uint32_t expectedSize) override;
 
   protected:
     virtual void SetFullSpeed(const bool value) override;

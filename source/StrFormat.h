@@ -11,7 +11,7 @@ typedef UINT16 uint16_t;
 #include <cstdint>
 #endif
 
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#ifdef _WIN32
 #define ATTRIBUTE_FORMAT_PRINTF(a, b)
 #else
 #define ATTRIBUTE_FORMAT_PRINTF(a, b) __attribute__((format(printf, a, b)))

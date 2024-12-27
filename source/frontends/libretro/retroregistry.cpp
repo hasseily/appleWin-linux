@@ -28,7 +28,7 @@ namespace
     std::string description;
     std::string section;
     std::string key;
-    std::vector<std::pair<std::string, DWORD> > values;
+    std::vector<std::pair<std::string, uint32_t> > values;
   };
 
   const std::vector<Variable> ourVariables =
@@ -128,8 +128,8 @@ namespace
       REG_RA2,
       REGVALUE_AUDIO_SOURCE,
       {
-       {REGVALUE_AUDIO_SPEAKER, static_cast<DWORD>(ra2::AudioSource::SPEAKER)},
-       {REGVALUE_AUDIO_MOCKINGBOARD, static_cast<DWORD>(ra2::AudioSource::MOCKINGBOARD)},
+       {REGVALUE_AUDIO_SPEAKER, static_cast<uint32_t>(ra2::AudioSource::SPEAKER)},
+       {REGVALUE_AUDIO_MOCKINGBOARD, static_cast<uint32_t>(ra2::AudioSource::MOCKINGBOARD)},
       }
      },
      {
@@ -138,8 +138,8 @@ namespace
       REG_RA2,
       REGVALUE_KEYBOARD_TYPE,
       {
-       {"ASCII", static_cast<DWORD>(ra2::KeyboardType::ASCII)},
-       {"Original", static_cast<DWORD>(ra2::KeyboardType::Original)},
+       {"ASCII", static_cast<uint32_t>(ra2::KeyboardType::ASCII)},
+       {"Original", static_cast<uint32_t>(ra2::KeyboardType::Original)},
       }
      },
      {
@@ -148,8 +148,8 @@ namespace
       REG_RA2,
       REGVALUE_PLAYLIST_START,
       {
-       {"First", static_cast<DWORD>(ra2::PlaylistStartDisk::First)},
-       {"Previous", static_cast<DWORD>(ra2::PlaylistStartDisk::Previous)},
+       {"First", static_cast<uint32_t>(ra2::PlaylistStartDisk::First)},
+       {"Previous", static_cast<uint32_t>(ra2::PlaylistStartDisk::Previous)},
       }
      },
     };
@@ -189,7 +189,7 @@ namespace ra2
           return iter2->second;
       }
 
-      DWORD getDWord(const std::string& section, const std::string& key) const override
+      uint32_t getDWord(const std::string& section, const std::string& key) const override
       {
           const std::string value = getString(section, key);
           return atoi(value.c_str());
@@ -206,7 +206,7 @@ namespace ra2
           myValues[section][key] = value;
       }
 
-      void putDWord(const std::string& section, const std::string& key, const DWORD value)
+      void putDWord(const std::string& section, const std::string& key, const uint32_t value)
       {
           putString(section, key, std::to_string(value));
       }
@@ -280,22 +280,22 @@ namespace ra2
 
   AudioSource GetAudioSource()
   {
-    DWORD value = 1;
+    uint32_t value = 1;
     RegLoadValue(REG_RA2, REGVALUE_AUDIO_SOURCE, TRUE, &value);
-    const AudioSource source = value <= DWORD(AudioSource::UNKNOWN) ? AudioSource(value) : AudioSource::UNKNOWN;
+    const AudioSource source = value <= uint32_t(AudioSource::UNKNOWN) ? AudioSource(value) : AudioSource::UNKNOWN;
     return source;
   }
 
   KeyboardType GetKeyboardEmulationType()
   {
-    DWORD value = static_cast<DWORD>(KeyboardType::ASCII);
+    uint32_t value = static_cast<uint32_t>(KeyboardType::ASCII);
     RegLoadValue(REG_RA2, REGVALUE_KEYBOARD_TYPE, TRUE, &value);
     return static_cast<KeyboardType>(value);
   }
 
   PlaylistStartDisk GetPlaylistStartDisk()
   {
-    DWORD value = static_cast<DWORD>(PlaylistStartDisk::First);
+    uint32_t value = static_cast<uint32_t>(PlaylistStartDisk::First);
     RegLoadValue(REG_RA2, REGVALUE_PLAYLIST_START, TRUE, &value);
     return static_cast<PlaylistStartDisk>(value);
   }

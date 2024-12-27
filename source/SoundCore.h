@@ -14,7 +14,7 @@ struct VOICE
 	bool bMute;
 	LONG nVolume;			// Current volume (as used by DirectSound)
 	LONG nFadeVolume;		// Current fade volume (as used by DirectSound)
-	DWORD dwUserVolume;		// Volume from slider on Property Sheet (0=Max)
+	uint32_t dwUserVolume;		// Volume from slider on Property Sheet (0=Max)
 	bool bIsSpeaker;
 	bool bRecentlyActive;	// (Speaker only) false after 0.2s of speaker inactivity
 	std::string name;
@@ -38,16 +38,16 @@ struct VOICE
 
 typedef VOICE* PVOICE;
 
-HRESULT DSGetLock(SoundBufferBase* pVoice, DWORD dwOffset, DWORD dwBytes,
+HRESULT DSGetLock(SoundBufferBase* pVoice, uint32_t dwOffset, uint32_t dwBytes,
 					  SHORT** ppDSLockedBuffer0, DWORD* pdwDSLockedBufferSize0,
 					  SHORT** ppDSLockedBuffer1, DWORD* pdwDSLockedBufferSize1);
 
-HRESULT DSGetSoundBuffer(VOICE* pVoice, DWORD dwFlags, DWORD dwBufferSize, DWORD nSampleRate, int nChannels, const char* pszDevName);
+HRESULT DSGetSoundBuffer(VOICE* pVoice, uint32_t dwFlags, uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char* pszDevName);
 void DSReleaseSoundBuffer(VOICE* pVoice);
 
 bool DSVoiceStop(PVOICE Voice);
-bool DSZeroVoiceBuffer(PVOICE Voice, DWORD dwBufferSize);
-bool DSZeroVoiceWritableBuffer(PVOICE Voice, DWORD dwBufferSize);
+bool DSZeroVoiceBuffer(PVOICE Voice, uint32_t dwBufferSize);
+bool DSZeroVoiceWritableBuffer(PVOICE Voice, uint32_t dwBufferSize);
 
 enum eFADE {FADE_NONE, FADE_IN, FADE_OUT};
 void SoundCore_SetFade(eFADE FadeType);
@@ -62,12 +62,12 @@ void SoundCore_SetErrorMax(const int nErrorMax);
 bool DSInit();
 void DSUninit();
 
-LONG NewVolume(DWORD dwVolume, DWORD dwVolumeMax);
+LONG NewVolume(uint32_t dwVolume, uint32_t dwVolumeMax);
 
 void SysClk_WaitTimer();
 bool SysClk_InitTimer();
 void SysClk_UninitTimer();
-void SysClk_StartTimerUsec(DWORD dwUsecPeriod);
+void SysClk_StartTimerUsec(uint32_t dwUsecPeriod);
 void SysClk_StopTimer();
 
 //

@@ -54,7 +54,7 @@ namespace ra2
     }
   }
 
-  BYTE* RetroFrame::GetResource(WORD id, LPCSTR lpType, DWORD expectedSize)
+  BYTE* RetroFrame::GetResource(WORD id, LPCSTR lpType, uint32_t expectedSize)
   {
     switch (id)
     {

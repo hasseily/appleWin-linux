@@ -13,7 +13,7 @@ namespace common2
     GNUFrame(const common2::EmulatorOptions & option);
 
     std::string Video_GetScreenShotFolder() const override;
-    BYTE* GetResource(WORD id, LPCSTR lpType, DWORD expectedSize) override;
+    BYTE* GetResource(WORD id, LPCSTR lpType, uint32_t expectedSize) override;
     
   protected:
     virtual std::string getResourcePath(const std::string& filename);

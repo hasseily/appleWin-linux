@@ -42,7 +42,7 @@ namespace common2
 
     void ExecuteInRunningMode(const int64_t microseconds);
     void ExecuteInDebugMode(const int64_t microseconds);
-    void Execute(const DWORD uCycles);
+    void Execute(const uint32_t uCycles);
 
     Speed mySpeed;
 

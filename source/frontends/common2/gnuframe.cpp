@@ -100,7 +100,7 @@ namespace common2
   }
 
   
-  BYTE* GNUFrame::GetResource(WORD id, LPCSTR lpType, DWORD expectedSize)
+  BYTE* GNUFrame::GetResource(WORD id, LPCSTR lpType, uint32_t expectedSize)
   {
     myResource.clear();
 
