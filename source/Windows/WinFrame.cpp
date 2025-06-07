@@ -55,10 +55,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Speaker.h"
 #include "Utilities.h"
 #include "CardManager.h"
-#include "../resource/resource.h"
 #include "Configuration/PropertySheet.h"
 #include "Debugger/Debug.h"
-#include "ProDOS_FileSystem.h"
 #include "ProDOS_Utils.h"
 #include "../resource/resource.h"
 
@@ -2607,7 +2605,7 @@ void Win32Frame::ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive)
 
 			if (nRes)
 			{
-				New_Blank_Disk(pTitle, pathname, nDiskSize, bIsHardDisk, pWinFrame);
+				New_Blank_Disk(pTitle, pathname, nDiskSize, bIsHardDisk, this);
 			}
 		}
 	}
@@ -2666,7 +2664,7 @@ void Win32Frame::ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive)
 				std::string pathname = szFilename;
 				if (FileExists( pathname ))
 				{
-					FormatDFormat_DOS33_DiskOS33Disk(pathname, this);
+					Format_DOS33_Disk(pathname, this);
 				}
 			}
 		}
