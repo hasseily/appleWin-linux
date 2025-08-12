@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
 
 #include <iostream>
@@ -165,8 +166,11 @@ void run_sdl(int argc, char *const argv[])
     }
 #endif
 }
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-int main(int argc, char *const argv[])
+int SDL_main(int argc, char *argv[])
 {
     // First we need to start up SDL, and make sure it went ok
     const Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS;
@@ -192,3 +196,19 @@ int main(int argc, char *const argv[])
 
     return exit;
 }
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef _WIN32
+// Windows-specific wrapper main to satisfy SDL2 linker expecting main
+int main(int argc, char *argv[])
+{
+    return SDL_main(argc, argv);
+}
+#else
+// On non-Windows just use SDL_main as main
+int main(int argc, char *argv[]) __attribute__((alias("SDL_main")));
+#endif

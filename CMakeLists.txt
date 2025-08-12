@@ -69,14 +69,15 @@ if (BUILD_LIBRETRO)
   add_subdirectory(source/frontends/libretro)
 endif()
 
-if (NOT WIN32)
-  # not supported yet
+if (NOT WIN32 OR DEFINED ENV{MSYSTEM})
+  # SA2 and QAPPLE supported on Linux and MSYS2
 
   if (BUILD_QAPPLE)
     add_subdirectory(source/frontends/qt)
   endif()
 
   if (BUILD_SA2)
+    MESSAGE("Adding SA2 subdirectory: source/frontends/sdl")
     add_subdirectory(source/frontends/sdl)
   endif()
 
