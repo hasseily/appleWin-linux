@@ -1,10 +1,16 @@
 #include "StdAfx.h"
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 #include "linux/paddle.h"
 
 #include "Memory.h"
 #include "CPU.h"
 #include "CopyProtectionDongles.h"
+#include <complex>
 
 namespace
 {

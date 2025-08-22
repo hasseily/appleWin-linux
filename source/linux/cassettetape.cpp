@@ -10,6 +10,11 @@
 
 #include <limits>
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 CassetteTape &CassetteTape::instance()
 {
     static CassetteTape tape;

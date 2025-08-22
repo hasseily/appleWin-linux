@@ -1,5 +1,10 @@
 #include <StdAfx.h>
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 #include "linux/linuxsoundbuffer.h"
 
 LinuxSoundBuffer::LinuxSoundBuffer(DWORD dwBufferSize, DWORD nSampleRate, int nChannels, LPCSTR pszVoiceName)
