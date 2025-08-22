@@ -35,6 +35,8 @@ add_library(common2 STATIC
 
 find_package(Boost REQUIRED)
 
+target_compile_features(common2 PUBLIC cxx_std_20)
+
 target_include_directories(common2 PRIVATE
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIRS}
@@ -44,6 +46,20 @@ target_link_libraries(common2 PRIVATE
   appleii
   apple2roms
   )
+
+# ---- getopt for Windows (MSVC/MinGW on Win32) ----
+if (WIN32)
+  # Build the local getopt implementation and expose its headers to this target
+  target_sources(common2 PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/getopt.c
+  )
+  target_include_directories(common2 PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+  # Prevent <Windows.h> from defining min/max macros, which break numeric_limits::min/max
+  target_compile_definitions(common2 PRIVATE NOMINMAX)
+endif()
 
 if (NOT WIN32)
   target_link_libraries(common2 PUBLIC

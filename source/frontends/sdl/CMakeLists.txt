@@ -6,10 +6,9 @@ add_executable(sa2)
 set(IMGUI_PATH "imgui/imgui")
 set(IMGUI_CLUB_PATH "imgui/imgui_club")
 
-find_package(SDL2 REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
 # we should use find_package, but Ubuntu does not provide it for SDL2_image
-pkg_search_module(SDL2_IMAGE REQUIRED SDL2_image)
-
+find_package(SDL2_Image CONFIG REQUIRED)
 
 if ((${CMAKE_SYSTEM_NAME} MATCHES "Darwin") OR (${CMAKE_SYSTEM_NAME} MATCHES "Windows"))
   # only OpenGL supported on MacOS and Windows
@@ -64,8 +63,9 @@ target_link_libraries(sa2 PRIVATE
   ${SLIRP_LIBRARIES}
   ${ZLIB_LIBRARIES}
 
-  ${SDL2_LIBRARIES}
-  ${SDL2_IMAGE_LIBRARIES}
+  SDL2::SDL2-static
+  SDL2::SDL2main
+  SDL2_image::SDL2_image-static
   ${GLES2_LIBRARIES}
   OpenGL::GL
   )
@@ -131,4 +131,10 @@ target_compile_definitions(sa2 PRIVATE
   )
 
 install(TARGETS sa2
-  DESTINATION bin)
+  RUNTIME_DEPENDENCIES
+    PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"    # skip Windows system DLLs
+    POST_EXCLUDE_REGEXES ".*system32/.*"       # skip more system DLLs
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION bin
+  ARCHIVE DESTINATION lib
+)

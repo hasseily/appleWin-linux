@@ -1,6 +1,7 @@
 include(FindPkgConfig)
 
-pkg_search_module(ZLIB REQUIRED zlib)
+#pkg_search_module(ZLIB REQUIRED zlib)
+find_package(ZLIB REQUIRED)
 
 if (NOT WIN32)
   pkg_search_module(SLIRP slirp)
@@ -98,6 +99,7 @@ set(SOURCE_FILES
   Utilities.cpp
   FrameBase.cpp
   CmdLine.cpp
+  Speech.cpp
 
   Configuration/PropertySheetHelper.cpp
   Configuration/Config.cpp
@@ -193,6 +195,7 @@ set(HEADER_FILES
   FourPlay.h
   SNESMAX.h
   SoundBuffer.h
+  Speech.h
 
   Common.h
   DiskDefs.h
@@ -247,11 +250,11 @@ else()
   target_sources(appleii PRIVATE linux/duplicates/tfearch.cpp)
 endif()
 
+target_link_libraries(appleii PUBLIC ZLIB::ZLIB)
 target_include_directories(appleii PRIVATE
   ${PCAP_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${SLIRP_INCLUDE_DIRS}
-  ${ZLIB_INCLUDE_DIRS}
   Debugger
   )
 
@@ -281,12 +284,17 @@ target_link_libraries(appleii PUBLIC
 target_link_directories(appleii PUBLIC
   ${PCAP_LIBRARY_DIRS}
   ${SLIRP_LIBRARY_DIRS}
-  ${ZLIB_LIBRARY_DIRS}
   )
 
-target_compile_options(appleii PUBLIC
+ if (MSVC)
+   target_compile_options(appleii PUBLIC
+   /wd4814
+   )
+else()
+  target_compile_options(appleii PUBLIC
   -Wno-multichar
   )
+endif()
 
 # wildcards (*.SYM) are not supported on Windows msys2
 add_custom_command(
@@ -295,3 +303,7 @@ add_custom_command(
   )
 
 configure_file(linux/linux_config.h.in linux/linux_config.h)
+
+message(STATUS "Release C flags: ${CMAKE_C_FLAGS_RELEASE}")
+message(STATUS "Release CXX flags: ${CMAKE_CXX_FLAGS_RELEASE}")
+message(STATUS "Linker flags (Release): ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
