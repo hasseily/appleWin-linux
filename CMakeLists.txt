@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+#cmake_minimum_required(VERSION 3.13)
 
 if (POLICY CMP0167)
   cmake_policy(SET CMP0167 NEW)
@@ -142,9 +142,6 @@ endif()
 if (BUILD_SA2)
   add_subdirectory(source/frontends/sdl)
 endif()
-
-if (NOT WIN32)
-  # not supported yet
 
 if (BUILD_QAPPLE)
   if (NOT WIN32)
