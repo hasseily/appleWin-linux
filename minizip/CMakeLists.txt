@@ -1,3 +1,5 @@
+find_package(ZLIB REQUIRED)
+
 set(SOURCE_FILES
   ioapi.c
   mztools.c
@@ -8,6 +10,8 @@ set(SOURCE_FILES
 add_library(minizip STATIC
   ${SOURCE_FILES}
   )
+
+target_link_libraries(minizip PUBLIC ZLIB::ZLIB)
 
 # this is needed since we include unzip.h and zip.h as <minizip/unzip.h> and <minizip/zip.h>
 # see https://github.com/madler/zlib/commit/7e6f0784cc0c33e8d5fcb368248168c6656f73c8
